@@ -4,9 +4,15 @@
 
 #include "Server/Public/FortInventory.h"
 
-void Player::ServerAcknowledgePossessionHook(APlayerController* PlayerController, APawn* P)
+void Player::ServerAcknowledgePossessionHook(AFortPlayerControllerAthena* PlayerController, APawn* P)
 {
 	PlayerController->AcknowledgedPawn = P;
+
+	AFortPlayerStateAthena* PlayerState = Cast<AFortPlayerStateAthena>(PlayerController->PlayerState);
+	if (!PlayerState) return;
+
+	PlayerState->HeroType = PlayerController->CosmeticLoadoutPC.Character->HeroDefinition;
+	UFortKismetLibrary::UpdatePlayerCustomCharacterPartsVisualization(PlayerState);
 
 	FortInventory::GiveStartingItems((AFortPlayerControllerAthena*)PlayerController);
 	FortInventory::Update((AFortPlayerControllerAthena*)PlayerController);
