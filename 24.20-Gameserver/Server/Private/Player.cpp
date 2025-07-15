@@ -74,6 +74,25 @@ void Player::ServerExecuteInventoryItemHook(const AFortPlayerControllerAthena* P
 	}
 }
 
+void Player::GetPlayerViewPointHook(const AFortPlayerControllerAthena* PlayerController, FVector& Location, FRotator& Rotation)
+{
+	if (!PlayerController)
+		return;
+
+	if (PlayerController->StateName.ComparisonIndex == 322)
+	{
+		Location = PlayerController->LastSpectatorSyncLocation;
+		Rotation = PlayerController->LastSpectatorSyncRotation;
+	}
+	else if (PlayerController->GetViewTarget())
+	{
+		Location = PlayerController->GetViewTarget()->K2_GetActorLocation();
+		Rotation = PlayerController->GetControlRotation();
+	}
+	else
+		return GetPlayerViewPoint(PlayerController, Location, Rotation);
+}
+
 void Player::Hook()
 {
 	auto PlayerController__VTable = AFortPlayerControllerAthena::GetDefaultObj()->VTable;
@@ -82,4 +101,5 @@ void Player::Hook()
 	THook(ServerAcknowledgePossessionHook, nullptr).VFT(PlayerController__VTable, 0x130);
 	THook(ServerAttemptAircraftJumpHook, nullptr).VFT(UFortControllerComponent_Aircraft__VTable, 0xa5);
 	THook(ServerExecuteInventoryItemHook, nullptr).VFT(PlayerController__VTable, 0x22d);
+	THook(GetPlayerViewPointHook, &GetPlayerViewPoint).MinHook(0xd4e130);
 }
