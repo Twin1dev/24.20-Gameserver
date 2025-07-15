@@ -24,8 +24,8 @@ namespace Addresses
     constexpr uint64_t SpecConstructor = 0x8577A3C;
     constexpr uint64_t HandleNewSafeZonePhase = 0x4799688;
     constexpr uint64_t SpawnActor = 0xE2A6FC;
-    constexpr uint64_t OnDamageServer = 0x515FEA4;
-    constexpr uint64_t GetPlayerViewPoint = 0xEAAFE4;
+    constexpr uint64_t OnDamageServer = 0x9C2879C;
+    constexpr uint64_t GetPlayerViewPoint = 0xd4e130;
     constexpr uint64_t SpawnLoot = 0x498C198;
     constexpr uint64_t CompletePickupAnimation = 0x1ba62b4;
     constexpr uint64_t ClientOnPawnDied = 0x53b4a78;
@@ -43,7 +43,7 @@ namespace Addresses
     constexpr uint64_t GetGameSessionClass = 0x178D570;
     constexpr uint64_t GetServicePermissions = 0x15A49B8;
     constexpr uint64_t OnPlayImpactFX = 0xFC819C;
-    constexpr uint64_t CantBuild = 0x4bbeb18;
+    constexpr uint64_t CantBuild = 0xA0D0A24;
     constexpr uint64_t ReplaceBuildingActor = 0x49a9aac;
     constexpr uint64_t RemoveFromAlivePlayers = 0x478b2e0;
     constexpr uint64_t OnRep_ZiplineState = 0x4EB6DD0;
