@@ -15,7 +15,7 @@ net.AllowEncryption=0
 ```
 
 ### Todo
-- [ ] Equipping
+- [x] Equipping
 - [ ] Storm
 - [ ] Looting
 - [ ] Building
