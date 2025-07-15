@@ -43,8 +43,6 @@ DWORD WINAPI Main(LPVOID)
     Util::Null(Addresses::BaseAddress + 0x298FFB0);
     Util::Null(Addresses::BaseAddress + 0x1D27130);
     Util::Null(Addresses::BaseAddress + 0x14B7CE8);
-    Util::Null(Addresses::BaseAddress + 0x12F3B5C); // collectgarbage
-    Util::Null(Addresses::BaseAddress + 0x12F446C); // also collectgarbage
 
     THook(THook::RetFalse, nullptr).MinHook(0x1903AD4);
     THook(THook::RetFalse, nullptr).MinHook(0x99CEB00); // warmup fix
