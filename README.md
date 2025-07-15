@@ -6,6 +6,9 @@ The long load times is unfixable without a custom client, if you would like to d
 
 Search "warmup mode" in strings or on this cl its `0x99CEB00`
 
+## Credits
+Ploosh - Fixed my replication and gave me all patches, also fixed editing bug.
+
 ## How to fix kick
 
 1. Go to your Backend's folder
@@ -22,3 +25,4 @@ net.AllowEncryption=0
 - [ ] Looting
 - [ ] Building
 - [ ] Editing
+
