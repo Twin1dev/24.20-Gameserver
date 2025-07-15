@@ -33,6 +33,41 @@ void Player::ServerAttemptAircraftJumpHook(const UFortControllerComponent_Aircra
 	PlayerState->AbilitySystemComponent->RemoveActiveGameplayEffectBySourceEffect(StormEffectClass, PlayerState->AbilitySystemComponent, 1);
 }
 
+void Player::ServerExecuteInventoryItemHook(const AFortPlayerControllerAthena* PlayerController, const FGuid& ItemGuid)
+{
+	if (!PlayerController || !PlayerController->MyFortPawn || !PlayerController->WorldInventory)
+		return;
+
+	for (FFortItemEntry& ItemEntry : PlayerController->WorldInventory->Inventory.ReplicatedEntries)
+	{
+		if (!ItemEntry.ItemDefinition || !ItemEntry.ItemGuid.IsValid())
+			continue;
+
+		if (ItemEntry.ItemGuid == ItemGuid && ItemGuid.IsValid())
+		{
+			if (ItemEntry.ItemDefinition->IsA(UFortDecoItemDefinition::StaticClass()))
+			{
+				PlayerController->MyFortPawn->PickUpActor(nullptr, (UFortDecoItemDefinition*)ItemEntry.ItemDefinition);
+
+				if (PlayerController->MyFortPawn->CurrentWeapon)
+				{
+					PlayerController->MyFortPawn->CurrentWeapon->ItemEntryGuid = ItemGuid;
+
+					if (AFortDecoTool_ContextTrap* DecoTool_ContextTrap = Cast<AFortDecoTool_ContextTrap>(PlayerController->MyFortPawn->CurrentWeapon))
+					{
+						UFortContextTrapItemDefinition* ContextTrapItemDefinition = Cast<UFortContextTrapItemDefinition>(ItemEntry.ItemDefinition);
+
+						DecoTool_ContextTrap->ContextTrapItemDefinition = ContextTrapItemDefinition;
+					}
+				}
+			}
+
+			PlayerController->MyFortPawn->EquipWeaponDefinition(Cast<UFortWeaponItemDefinition>(ItemEntry.ItemDefinition), ItemGuid, FGuid(), false);
+			break;
+		}
+	}
+}
+
 void Player::Hook()
 {
 	auto PlayerController__VTable = AFortPlayerControllerAthena::GetDefaultObj()->VTable;
@@ -40,4 +75,5 @@ void Player::Hook()
 
 	THook(ServerAcknowledgePossessionHook, nullptr).VFT(PlayerController__VTable, 0x130);
 	THook(ServerAttemptAircraftJumpHook, nullptr).VFT(UFortControllerComponent_Aircraft__VTable, 0xa5);
+	THook(ServerExecuteInventoryItemHook, nullptr).VFT(PlayerController__VTable, 0x22d);
 }
