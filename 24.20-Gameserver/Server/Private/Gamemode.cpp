@@ -2,6 +2,7 @@
 
 #include "Server/Public/Util.h"
 #include "Server/Public/Net.h"
+#include "Server/Public/Abilities.h"
 
 bool Gamemode::ReadyToStartMatchHook(AFortGameModeBR* GameMode)
 {
@@ -108,6 +109,20 @@ void Gamemode::HandleNewSafeZonePhaseHook(AFortGameModeAthena* GameMode, int32 Z
 	
 }
 
+void Gamemode::HandleStartingNewPlayerHook(AFortGameModeAthena* GameMode, AFortPlayerControllerAthena* NewPlayer)
+{
+	auto PlayerState = (AFortPlayerStateAthena*)NewPlayer->PlayerState;
+
+	if (!PlayerState)
+		return HandleStartingNewPlayer(GameMode, NewPlayer);
+
+	Abilities::GiveDefaultAbilitySet(PlayerState->AbilitySystemComponent);
+
+
+
+	return HandleStartingNewPlayer(GameMode, NewPlayer);
+}
+
 void Gamemode::Hook()
 {
 	auto Gamemode__VTable = AFortGameModeBR::GetDefaultObj()->VTable;
@@ -115,4 +130,5 @@ void Gamemode::Hook()
 	THook(SpawnDefaultPawnFor, nullptr).VFT(Gamemode__VTable, 0xE2);
 	THook(ReadyToStartMatchHook, nullptr).VFT(Gamemode__VTable, 0x120);
 	//THook(HandleNewSafeZonePhaseHook, nullptr).MinHook(0x9919130);
+	THook(HandleStartingNewPlayerHook, &HandleStartingNewPlayer).VFT(Gamemode__VTable, 0xe8);
 }

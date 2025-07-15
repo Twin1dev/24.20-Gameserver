@@ -145,7 +145,9 @@
     <ClInclude Include="SDK\SDK.hpp" />
     <ClInclude Include="SDK\UnrealContainers.hpp" />
     <ClInclude Include="SDK\UtfN.hpp" />
+    <ClInclude Include="Server\Public\Abilities.h" />
     <ClInclude Include="Server\Public\Addresses.h" />
+    <ClInclude Include="Server\Public\FortInventory.h" />
     <ClInclude Include="Server\Public\Gamemode.h" />
     <ClInclude Include="Server\Public\Net.h" />
     <ClInclude Include="Server\Public\Player.h" />
@@ -159,10 +161,12 @@
     <ClCompile Include="SDK\SDK\Engine_functions.cpp" />
     <ClCompile Include="SDK\SDK\FortniteGame_functions.cpp" />
     <ClCompile Include="SDK\SDK\GameplayAbilities_functions.cpp" />
+    <ClCompile Include="Server\Private\Abilities.cpp" />
     <ClCompile Include="Server\Private\Gamemode.cpp" />
     <ClCompile Include="Server\Private\Util.cpp" />
     <ClCompile Include="Server\Private\Net.cpp" />
     <ClCompile Include="Server\Private\Player.cpp" />
+    <ClCompile Include="Server\Private\FortInventory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SDK\NameCollisions.inl" />

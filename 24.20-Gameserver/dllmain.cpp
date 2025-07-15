@@ -5,6 +5,7 @@
 #include "Server/Public/Net.h"
 #include "Server/Public/Gamemode.h"
 #include "Server/Public/Player.h"
+#include "Server/Public/Abilities.h"
 
 DWORD WINAPI Main(LPVOID)
 {
@@ -44,6 +45,7 @@ DWORD WINAPI Main(LPVOID)
     Util::Null(Addresses::BaseAddress + 0x14B7CE8);
 
     THook(THook::RetFalse, nullptr).MinHook(0x1903AD4);
+    THook(THook::RetFalse, nullptr).MinHook(0x99CEB00); // warmup fix
     THook(THook::RetTrue, nullptr).MinHook(0x99ACF70);
     THook(THook::RetTrue, nullptr).MinHook(0xABEB8A4);
     THook(THook::RetTrue, nullptr).MinHook(0x853F4F8);
@@ -53,6 +55,7 @@ DWORD WINAPI Main(LPVOID)
     Net::Hook();
     Gamemode::Hook();
     Player::Hook();
+    Abilities::Hook();
 
     THook(Util::DispatchRequestHook, &Util::DispatchRequest).MinHook(Addresses::DispatchRequest);
 

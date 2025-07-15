@@ -2,9 +2,14 @@
 
 #include "Server/Public/Util.h"
 
+#include "Server/Public/FortInventory.h"
+
 void Player::ServerAcknowledgePossessionHook(APlayerController* PlayerController, APawn* P)
 {
 	PlayerController->AcknowledgedPawn = P;
+
+	FortInventory::GiveStartingItems((AFortPlayerControllerAthena*)PlayerController);
+	FortInventory::Update((AFortPlayerControllerAthena*)PlayerController);
 }
 
 void Player::ServerAttemptAircraftJumpHook(const UFortControllerComponent_Aircraft* ControllerComponent, const FRotator& ClientRotation)

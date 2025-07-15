@@ -20,8 +20,8 @@ namespace Addresses
     constexpr uint64_t InternalTryActivateAbility = 0x858b5f8;
     constexpr uint64_t StaticLoadObject = 0x137c998;
     constexpr uint64_t StaticFindObject = 0xee6bc0;
-    constexpr uint64_t InternalGiveAbility = 0x1343068;
-    constexpr uint64_t SpecConstructor = 0x1342F9C;
+    constexpr uint64_t InternalGiveAbility = 0x858A458;
+    constexpr uint64_t SpecConstructor = 0x8577A3C;
     constexpr uint64_t HandleNewSafeZonePhase = 0x4799688;
     constexpr uint64_t SpawnActor = 0xE2A6FC;
     constexpr uint64_t OnDamageServer = 0x515FEA4;

@@ -583,6 +583,16 @@ public:
 	int32                                         B;                                                 // 0x0004(0x0004)(Edit, ZeroConstructor, SaveGame, IsPlainOldData, NoDestructor, HasGetValueTypeHash, NativeAccessSpecifierPublic)
 	int32                                         C;                                                 // 0x0008(0x0004)(Edit, ZeroConstructor, SaveGame, IsPlainOldData, NoDestructor, HasGetValueTypeHash, NativeAccessSpecifierPublic)
 	int32                                         D;                                                 // 0x000C(0x0004)(Edit, ZeroConstructor, SaveGame, IsPlainOldData, NoDestructor, HasGetValueTypeHash, NativeAccessSpecifierPublic)
+
+	bool operator==(const FGuid& Other) const
+	{
+		return A == Other.A && B == Other.B && C == Other.C && D == Other.D;
+	}
+
+	bool IsValid() const
+	{
+		return A != 0 || B != 0 || C != 0 || D != 0;
+	}
 };
 
 // ScriptStruct CoreUObject.AutomationEvent
