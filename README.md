@@ -13,3 +13,10 @@ Search "warmup mode" in strings or on this cl its `0x99CEB00`
 [ConsoleVariables]
 net.AllowEncryption=0
 ```
+
+### Todo
+- [ ] Equipping
+- [ ] Storm
+- [ ] Looting
+- [ ] Building
+- [ ] Editing
