@@ -23,6 +23,7 @@ net.AllowEncryption=0
 - [x] Equipping
 - [ ] Storm
 - [ ] Looting
-- [ ] Building
-- [ ] Editing
+- [x] Building
+- [x] Editing
+- [ ] Pawn Death
 
