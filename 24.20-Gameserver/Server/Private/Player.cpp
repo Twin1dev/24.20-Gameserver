@@ -156,6 +156,79 @@ void Player::ServerCreateBuildingActorHook(AFortPlayerControllerAthena* PlayerCo
 	ExistingBuildings.Free();
 }
 
+void Player::ServerBeginEditingBuildingActorHook(AFortPlayerControllerAthena* PlayerController, ABuildingSMActor* BuildingActorToEdit)
+{
+	if (!PlayerController || !PlayerController->MyFortPawn || !BuildingActorToEdit)
+		return;
+
+	AFortPlayerStateAthena* PlayerState = Cast<AFortPlayerStateAthena>(PlayerController->PlayerState);
+
+	BuildingActorToEdit->EditingPlayer = PlayerState;
+	BuildingActorToEdit->OnRep_EditingPlayer();
+
+	auto EditToolDefinition = Util::StaticFindObject<UFortItemDefinition>("/Game/Items/Weapons/BuildingTools/EditTool.EditTool");
+
+	if (PlayerController->MyFortPawn->CurrentWeapon->WeaponData != EditToolDefinition)
+	{
+		FFortItemEntry* ItemEntry = FortInventory::FindItemEntry(PlayerController, EditToolDefinition);
+
+		if (!ItemEntry)
+			return;
+
+		PlayerController->ServerExecuteInventoryItem(ItemEntry->ItemGuid);
+	}
+
+	AFortWeap_EditingTool* EditTool = Cast<AFortWeap_EditingTool>(PlayerController->MyFortPawn->CurrentWeapon);
+
+	if (EditTool)
+	{
+		EditTool->EditActor = BuildingActorToEdit;
+		EditTool->OnRep_EditActor();
+	}
+}
+
+void Player::ServerEditBuildingActorHook(AFortPlayerControllerAthena* PlayerController, ABuildingSMActor* BuildingActorToEdit, TSubclassOf<class ABuildingSMActor> NewBuildingClass, uint8 RotationIterations, bool bMirrored)
+{
+	if (!PlayerController || !BuildingActorToEdit || !NewBuildingClass || BuildingActorToEdit->bDestroyed || BuildingActorToEdit->EditingPlayer != (AFortPlayerStateAthena*)PlayerController->PlayerState)
+		return;
+
+	BuildingActorToEdit->EditingPlayer = nullptr;
+
+	if (auto NewBuilding = ReplaceBuildingActor(BuildingActorToEdit, 1, NewBuildingClass.Get(), BuildingActorToEdit->CurrentBuildingLevel, RotationIterations, bMirrored, PlayerController))
+	{
+		NewBuilding->bPlayerPlaced = true;
+	}
+}
+
+void Player::ServerEndEditingBuildingActorHook(AFortPlayerControllerAthena* PlayerController, ABuildingSMActor* BuildingActorToStopEditing)
+{
+	if (!PlayerController || !BuildingActorToStopEditing || BuildingActorToStopEditing->EditingPlayer != (AFortPlayerStateAthena*)PlayerController->PlayerState || !PlayerController->MyFortPawn)
+		return;
+
+	BuildingActorToStopEditing->SetNetDormancy(ENetDormancy::DORM_DormantAll);
+	BuildingActorToStopEditing->EditingPlayer = nullptr;
+
+	auto EditToolDefinition = Util::StaticFindObject<UFortItemDefinition>("/Game/Items/Weapons/BuildingTools/EditTool.EditTool");
+
+	if (PlayerController->MyFortPawn->CurrentWeapon->WeaponData != EditToolDefinition)
+	{
+		FFortItemEntry* ItemEntry = FortInventory::FindItemEntry(PlayerController, EditToolDefinition);
+
+		if (!ItemEntry)
+			return;
+
+		PlayerController->ServerExecuteInventoryItem(ItemEntry->ItemGuid);
+	}
+
+	AFortWeap_EditingTool* EditTool = Cast<AFortWeap_EditingTool>(PlayerController->MyFortPawn->CurrentWeapon);
+
+	if (EditTool)
+	{
+		EditTool->EditActor = nullptr;
+		EditTool->OnRep_EditActor();
+	}
+}
+
 void Player::OnDamageServerHook(ABuildingSMActor* BuildingActor, float Damage, FGameplayTagContainer& DamageTags, FVector& Momentum, FHitResult& HitInfo, AController* InstigatedBy, AActor* DamageCauser, FGameplayEffectContextHandle& EffectContext)
 {
 	if (!BuildingActor
@@ -221,11 +294,15 @@ void Player::Hook()
 	void** UFortControllerComponent_Aircraft__VTable = UFortControllerComponent_Aircraft::GetDefaultObj()->VTable;
 
 	CantBuild = decltype(CantBuild)(Addresses::BaseAddress + Addresses::CantBuild);
+	ReplaceBuildingActor = decltype(ReplaceBuildingActor)(Addresses::BaseAddress + Addresses::ReplaceBuildingActor);
 
 	THook(ServerAcknowledgePossessionHook, nullptr).VFT(PlayerController__VTable, 0x130);
 	THook(ServerAttemptAircraftJumpHook, nullptr).VFT(UFortControllerComponent_Aircraft__VTable, 0xa5);
 	THook(ServerExecuteInventoryItemHook, nullptr).VFT(PlayerController__VTable, 0x22d);
-	THook(ServerCreateBuildingActorHook, nullptr).VFT(PlayerController__VTable, 0x24C);
+	THook(ServerCreateBuildingActorHook, nullptr).VFT(PlayerController__VTable, 0x24d);
+	THook(ServerBeginEditingBuildingActorHook, nullptr).VFT(PlayerController__VTable, 0x254);
+	THook(ServerEditBuildingActorHook, nullptr).VFT(PlayerController__VTable, 0x24F);
+	THook(ServerEndEditingBuildingActorHook, nullptr).VFT(PlayerController__VTable, 0x252);
 	THook(GetPlayerViewPointHook, &GetPlayerViewPoint).MinHook(Addresses::GetPlayerViewPoint);
 	THook(OnDamageServerHook, &OnDamageServer).MinHook(Addresses::OnDamageServer);
 }

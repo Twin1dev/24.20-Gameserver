@@ -44,7 +44,7 @@ namespace Addresses
     constexpr uint64_t GetServicePermissions = 0x15A49B8;
     constexpr uint64_t OnPlayImpactFX = 0xFC819C;
     constexpr uint64_t CantBuild = 0xA0D0A24;
-    constexpr uint64_t ReplaceBuildingActor = 0x49a9aac;
+    constexpr uint64_t ReplaceBuildingActor = 0x9CB8FD8;
     constexpr uint64_t RemoveFromAlivePlayers = 0x478b2e0;
     constexpr uint64_t OnRep_ZiplineState = 0x4EB6DD0;
     constexpr uint64_t SendCustomStatEvent = 0x4F66430;
